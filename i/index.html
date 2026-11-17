@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>우리집맛 초대</title>
+<!-- 우리집맛 초대 안내 페이지(M1 T10). 원본은 비공개 저장소 woorijipmat의 invite/ 폴더예요.
+     링크 모양: https://ramuso.github.io/woorijipmat-invite/i/?c=초대코드
+     코드는 이 페이지 안에서만 쓰고 어디로도 보내지 않아요. 외부 글꼴·분석 도구도 안 불러요. -->
+<style>
+  :root { --bg:#FFFFFF; --sunk:#F4F2EE; --line:#ECE7E0; --ink:#1F1B17; --muted:#746C63; --yolk:#F6B82D; --on-yolk:#1F1B17; --home:#227368; --err:#FBE9E3; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1B1916; --sunk:#25221E; --line:#2F2B26; --ink:#F3EFE9; --muted:#A49B90; --home:#5CC2B0; --err:#3A231B; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; font-size:15px; line-height:1.5; }
+  main { max-width:440px; margin:0 auto; padding:48px 16px 32px; display:flex; flex-direction:column; gap:20px; text-align:center; }
+  h1 { margin:0; font-size:32px; line-height:38px; }
+  p { margin:0; }
+  .muted { color:var(--muted); }
+  .home { color:var(--home); font-weight:700; }
+  .code { border-radius:14px; background:var(--sunk); padding:14px; font-weight:700; font-size:18px; letter-spacing:.04em; }
+  .btn { display:flex; align-items:center; justify-content:center; min-height:50px; border-radius:16px; background:var(--yolk); color:var(--on-yolk); font-weight:700; text-decoration:none; }
+  .err { border-radius:14px; padding:10px 12px; background:var(--err); }
+  section { text-align:left; border-top:1px solid var(--line); padding-top:20px; }
+  h2 { font-size:18px; margin:0 0 8px; }
+  ol { margin:0; padding-left:20px; }
+  li + li { margin-top:6px; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>우리집맛</h1>
+  <div id="ok" hidden>
+    <p><span class="home">우리집</span>에 초대받았어요</p>
+    <p class="muted">레시피북, 장보기, 냉장고를 같이 써요</p>
+  </div>
+  <div id="ok-code" class="code" hidden></div>
+  <a id="open" class="btn" href="#" hidden>우리집맛에서 열기</a>
+  <p id="bad" class="err" hidden>초대 링크가 올바르지 않아요. 받은 링크를 다시 눌러 주세요.</p>
+  <section id="install">
+    <h2>앱이 없으면</h2>
+    <ol>
+      <li>우리집맛은 아직 스토어에 없어요. 초대한 사람에게 설치 파일(APK)을 받아 설치해요.</li>
+      <li>앱을 열고 구글 계정으로 로그인해요.</li>
+      <li>이 링크를 한 번 더 누르거나, 앱의 나 탭 [초대 코드 넣기]에 위 코드를 넣어요.</li>
+    </ol>
+  </section>
+</main>
+<script>
+  // 초대 코드는 영문 대문자·숫자 10자예요(create_invite). 모양이 다르면 앱을 열지 않아요
+  var code = (new URLSearchParams(location.search).get('c') || '').trim().toUpperCase();
+  if (/^[A-Z0-9]{10}$/.test(code)) {
+    var path = 'join?c=' + code;
+    var back = location.origin + location.pathname + '?c=' + code + '#install';
+    var open = document.getElementById('open');
+    // 안드로이드: intent 주소라 앱이 없으면 이 페이지의 "앱이 없으면"으로 돌아와요
+    open.href = /Android/i.test(navigator.userAgent)
+      ? 'intent://' + path + '#Intent;scheme=woorijipmat;package=com.woorijipmat.app;S.browser_fallback_url=' + encodeURIComponent(back) + ';end'
+      : 'woorijipmat://' + path;
+    document.getElementById('ok-code').textContent = '초대 코드 · ' + code;
+    ['ok', 'ok-code', 'open'].forEach(function (id) { document.getElementById(id).hidden = false; });
+  } else {
+    document.getElementById('bad').hidden = false;
+  }
+</script>
+</body>
+</html>
